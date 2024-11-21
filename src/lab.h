@@ -1,9 +1,11 @@
 #ifndef LAB_H
 #define LAB_H
+#define _GNU_SOURCE
 
 #include <stdlib.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include <stdio.h>
 
 
 #ifdef __cplusplus

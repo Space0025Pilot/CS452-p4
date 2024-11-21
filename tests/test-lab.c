@@ -1,24 +1,24 @@
-#include "harness/unity.h"
-#include "../src/lab.h"
+// #include "harness/unity.h"
+// #include "../src/lab.h"
 
 
-void setUp(void) {
-  // set stuff up here
-}
+// void setUp(void) {
+//   // set stuff up here
+// }
 
-void tearDown(void) {
-  // clean stuff up here
-}
+// void tearDown(void) {
+//   // clean stuff up here
+// }
 
-void test_stuff(void){
-  // test stuff here
-}
+// void test_stuff(void){
+//   // test stuff here
+// }
 
-int main(void) {
-  UNITY_BEGIN();
-  RUN_TEST(test_stuff);
-  return UNITY_END();
-}
+// int main(void) {
+//   UNITY_BEGIN();
+//   RUN_TEST(test_stuff);
+//   return UNITY_END();
+// }
 
 #include <assert.h>
 #include <stdlib.h>
@@ -32,40 +32,40 @@ int main(void) {
 #include "../src/lab.h"
 
 
-void setUp(void) {
-  // set stuff up here
-}
-
-void tearDown(void) {
-  // clean stuff up here
-}
-
-
-
-// /**
-//  * Check the pool to ensure it is full.
-//  */
-// void check_buddy_pool_full(struct buddy_pool *pool)
-// {
-//   //A full pool should have all values 0-(kval-1) as empty
-//   for (size_t i = 0; i < pool->kval_m; i++)
-//     {
-//       assert(pool->avail[i].next == &pool->avail[i]);
-//       assert(pool->avail[i].prev == &pool->avail[i]);
-//       assert(pool->avail[i].tag == BLOCK_UNUSED);
-//       assert(pool->avail[i].kval == i);
-//     }
-
-//   //The avail array at kval should have the base block
-//   assert(pool->avail[pool->kval_m].next->tag == BLOCK_AVAIL);
-//   assert(pool->avail[pool->kval_m].next->next == &pool->avail[pool->kval_m]);
-//   assert(pool->avail[pool->kval_m].prev->prev == &pool->avail[pool->kval_m]);
-
-//   //Check to make sure the base address points to the starting pool
-//   //If this fails either buddy_init is wrong or we have corrupted the
-//   //buddy_pool struct.
-//   assert(pool->avail[pool->kval_m].next == pool->base);
+// void setUp(void) {
+//   // set stuff up here
 // }
+
+// void tearDown(void) {
+//   // clean stuff up here
+// }
+
+
+
+/**
+ * Check the pool to ensure it is full.
+ */
+void check_buddy_pool_full(struct buddy_pool *pool)
+{
+  //A full pool should have all values 0-(kval-1) as empty
+  for (size_t i = 0; i < pool->kval_m; i++)
+    {
+      assert(pool->avail[i].next == &pool->avail[i]);
+      assert(pool->avail[i].prev == &pool->avail[i]);
+      assert(pool->avail[i].tag == BLOCK_UNUSED);
+      assert(pool->avail[i].kval == i);
+    }
+
+  //The avail array at kval should have the base block
+  assert(pool->avail[pool->kval_m].next->tag == BLOCK_AVAIL);
+  assert(pool->avail[pool->kval_m].next->next == &pool->avail[pool->kval_m]);
+  assert(pool->avail[pool->kval_m].prev->prev == &pool->avail[pool->kval_m]);
+
+  //Check to make sure the base address points to the starting pool
+  //If this fails either buddy_init is wrong or we have corrupted the
+  //buddy_pool struct.
+  assert(pool->avail[pool->kval_m].next == pool->base);
+}
 
 // /**
 //  * Check the pool to ensure it is empty.
@@ -135,37 +135,37 @@ void tearDown(void) {
 //   buddy_destroy(&pool);
 // }
 
-// /**
-//  * Tests to make sure that the struct buddy_pool is correct and all fields
-//  * have been properly set kval_m, avail[kval_m], and base pointer after a
-//  * call to init
-//  */
-// void test_buddy_init(void)
-// {
-//   fprintf(stderr, "->Testing buddy init\n");
-//   //Loop through all kval MIN_k-DEFAULT_K and make sure we get the correct amount allocated.
-//   //We will check all the pointer offsets to ensure the pool is all configured correctly
-//   for (size_t i = MIN_K; i <= DEFAULT_K; i++)
-//     {
-//       size_t size = UINT64_C(1) << i;
-//       struct buddy_pool pool;
-//       buddy_init(&pool, size);
-//       check_buddy_pool_full(&pool);
-//       buddy_destroy(&pool);
-//     }
-// }
+/**
+ * Tests to make sure that the struct buddy_pool is correct and all fields
+ * have been properly set kval_m, avail[kval_m], and base pointer after a
+ * call to init
+ */
+void test_buddy_init(void)
+{
+  fprintf(stderr, "->Testing buddy init\n");
+  //Loop through all kval MIN_k-DEFAULT_K and make sure we get the correct amount allocated.
+  //We will check all the pointer offsets to ensure the pool is all configured correctly
+  for (size_t i = MIN_K; i <= DEFAULT_K; i++)
+    {
+      size_t size = UINT64_C(1) << i;
+      struct buddy_pool pool;
+      buddy_init(&pool, size);
+      check_buddy_pool_full(&pool);
+      buddy_destroy(&pool);
+    }
+}
 
 
-// int main(void) {
-//   time_t t;
-//   unsigned seed = (unsigned)time(&t);
-//   fprintf(stderr, "Random seed:%d\n", seed);
-//   srand(seed);
-//   printf("Running memory tests.\n");
+int main(void) {
+  time_t t;
+  unsigned seed = (unsigned)time(&t);
+  fprintf(stderr, "Random seed:%d\n", seed);
+  srand(seed);
+  printf("Running memory tests.\n");
 
-//   UNITY_BEGIN();
-//   RUN_TEST(test_buddy_init);
-//   RUN_TEST(test_buddy_malloc_one_byte);
-//   RUN_TEST(test_buddy_malloc_one_large);
-// return UNITY_END();
-// }
+  UNITY_BEGIN();
+  RUN_TEST(test_buddy_init);
+  // RUN_TEST(test_buddy_malloc_one_byte);
+  // RUN_TEST(test_buddy_malloc_one_large);
+return UNITY_END();
+}
