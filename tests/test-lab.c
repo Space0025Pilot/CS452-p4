@@ -186,11 +186,13 @@ void test_buddy_malloc_one_large(void)
   //Ask for an exact K value to be allocated. This test makes assumptions on
   //the internal details of buddy_init.
   size_t ask = bytes - sizeof(struct avail);
+  fprintf(stderr, "Asking for %zu bytes (pool size: %zu)\n", ask, bytes);
   void *mem = buddy_malloc(&pool, ask);
   assert(mem != NULL);
 
   //Move the pointer back and make sure we got what we expected
   struct avail *tmp = (struct avail *)mem - 1;
+  fprintf(stderr, "Allocated block kval: %d\n", tmp->kval);
   assert(tmp->kval == MIN_K);
   assert(tmp->tag == BLOCK_RESERVED);
   check_buddy_pool_empty(&pool);

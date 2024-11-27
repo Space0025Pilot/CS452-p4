@@ -27,41 +27,40 @@ void *buddy_malloc(struct buddy_pool *pool, size_t size){
         return NULL;  // Invalid input
     }
 
-    size_t kval_needed = btok(size);  // Find the K value for the requested size
-    if (kval_needed < SMALLEST_K) {
-        kval_needed = SMALLEST_K;  // Ensure we don't allocate smaller than the minimum size
+    size_t kval = btok(size);
+    if (kval < MIN_K) {
+        kval = MIN_K;  // Ensure the requested size meets the minimum size constraint
     }
+    // Try to allocate the requested size
+    for (size_t i = kval; i <= pool->kval_m; i++) {
+        struct avail *block = pool->avail[i].next;
+        if (block != NULL && block->tag == BLOCK_AVAIL) {
+            // Block found, now allocate it
+            block->tag = BLOCK_RESERVED;
 
-    // Search for the smallest available block
-    struct avail *block = NULL;
-    for (size_t kval = kval_needed; kval <= pool->kval_m; kval++) {
-        if (pool->avail[kval].tag == BLOCK_AVAIL) {
-            block = &pool->avail[kval];  // Found a suitable block
-            break;
+            // If the block is larger than needed, split it into smaller blocks
+            if (block->kval > kval) {
+                size_t new_kval = block->kval - 1;
+                struct avail *buddy = (struct avail *)((uintptr_t)block + (1 << new_kval));
+
+                buddy->tag = BLOCK_AVAIL;
+                buddy->kval = new_kval;
+                buddy->next = pool->avail[new_kval].next;
+                buddy->prev = &pool->avail[new_kval];
+
+                if (buddy->next != NULL) {
+                    buddy->next->prev = buddy;
+                }
+                pool->avail[new_kval].next = buddy;
+
+                block->kval = new_kval;
+            }
+
+            return (void *)block;
         }
     }
 
-    if (!block) {
-        return NULL;  // No available block large enough
-    }
-
-    // Split blocks if necessary to match the requested size
-    while (block->kval > kval_needed) {
-        struct avail *buddy = buddy_calc(pool, block);  // Find the buddy block
-        block->kval--;  // Split the block into two
-        buddy->kval = block->kval;  // Set buddy's K value to match
-
-        // Mark the buddy as available
-        buddy->tag = BLOCK_AVAIL;
-        buddy->next = pool->avail[block->kval].next;
-        buddy->prev = pool->avail[block->kval].prev;
-
-        block = buddy;  // Move to the buddy block
-    }
-
-    // Mark the allocated block as reserved
-    block->tag = BLOCK_RESERVED;
-    return (void*)block;  // Return the address of the allocated block
+    return NULL;  // No suitable block found
 }
 
 void buddy_free(struct buddy_pool *pool, void *ptr){
