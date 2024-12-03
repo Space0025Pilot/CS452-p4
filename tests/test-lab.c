@@ -86,7 +86,7 @@ void test_buddy_malloc_one_byte(void)
  */
 void test_buddy_malloc_two_byte(void)
 {
-  fprintf(stderr, "->Test allocating and freeing 1 byte\n");
+  fprintf(stderr, "->Test allocating and freeing 2 bytes\n");
   struct buddy_pool pool;
   int kval = MIN_K;
   size_t size = UINT64_C(1) << kval;
@@ -105,7 +105,7 @@ void test_buddy_malloc_two_byte(void)
  */
 void test_buddy_malloc_thirty_byte(void)
 {
-  fprintf(stderr, "->Test allocating and freeing 1 byte\n");
+  fprintf(stderr, "->Test allocating and freeing 30 bytes\n");
   struct buddy_pool pool;
   int kval = MIN_K;
   size_t size = UINT64_C(1) << kval;
@@ -124,7 +124,7 @@ void test_buddy_malloc_thirty_byte(void)
  */
 void test_buddy_malloc_256_byte(void)
 {
-  fprintf(stderr, "->Test allocating and freeing 1 byte\n");
+  fprintf(stderr, "->Test allocating and freeing 256 bytes\n");
   struct buddy_pool pool;
   int kval = MIN_K;
   size_t size = UINT64_C(1) << kval;
@@ -142,7 +142,7 @@ void test_buddy_malloc_256_byte(void)
  */
 void test_buddy_malloc_32786_byte(void)
 {
-  fprintf(stderr, "->Test allocating and freeing 1 byte\n");
+  fprintf(stderr, "->Test allocating and freeing 32786 bytes\n");
   struct buddy_pool pool;
   int kval = MIN_K;
   size_t size = UINT64_C(1) << kval;
@@ -161,7 +161,7 @@ void test_buddy_malloc_32786_byte(void)
  */
 void test_buddy_malloc_4294967296_byte(void)
 {
-  fprintf(stderr, "->Test allocating and freeing 1 byte\n");
+  fprintf(stderr, "->Test allocating and freeing 4294967296 bytes\n");
   struct buddy_pool pool;
   int kval = MIN_K;
   size_t size = UINT64_C(1) << kval;
@@ -237,13 +237,22 @@ int main(void) {
   printf("Running memory tests.\n");
 
   UNITY_BEGIN();
-  RUN_TEST(test_buddy_init);
-  RUN_TEST(test_buddy_malloc_one_byte);
+  printf("\nMy Added Tests:\n\n");
   RUN_TEST(test_buddy_malloc_two_byte);
+  printf("\n");
   RUN_TEST(test_buddy_malloc_thirty_byte);
+  printf("\n");
   RUN_TEST(test_buddy_malloc_256_byte);
+  printf("\n");
   RUN_TEST(test_buddy_malloc_32786_byte);
+  printf("\n");
   RUN_TEST(test_buddy_malloc_4294967296_byte);
+  printf("\n");
+  printf("3 Provided Tests:\n\n");
+  RUN_TEST(test_buddy_init);
+  printf("\n");
+  RUN_TEST(test_buddy_malloc_one_byte);
+  printf("\n");
   RUN_TEST(test_buddy_malloc_one_large);
 return UNITY_END();
 }
